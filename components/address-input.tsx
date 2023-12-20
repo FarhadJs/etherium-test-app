@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { Input } from "@/components/ui/input";
-
 import {
   Dialog,
   DialogContent,
@@ -10,11 +9,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import QrIcon from "@/assets/Scanqr.svg";
 import Image from "next/image";
+import QrScan from "./qrcode/qrcode-scan";
+import Html5QrcodePlugin from "./qrcode/html5-qrcode-plugin";
+import ScanQR from "./qrcode/qr-scanner";
 
 export const AddressInput = () => {
+  const onNewScanResult = (decodedText: string, decodedResult: string) => {
+    console.log(decodedText, decodedResult);
+  };
+
   return (
     <>
       <div className="relative">
@@ -26,8 +31,20 @@ export const AddressInput = () => {
           <DialogContent className="bg-neutral-800">
             <DialogHeader>
               <DialogTitle>QR Scan Code</DialogTitle>
-              <DialogDescription className="flex items-center justify-center">
-                <Image alt="qrcode" src={QrIcon} className="w-44 h-44 opacity-20" />
+              <DialogDescription className="flex items-center justify-center relative">
+                {/* <Image
+                  alt="qrcode"
+                  src={QrIcon}
+                  className="w-44 h-44 opacity-20 absolute z-0 top-6"
+                /> */}
+                {/* <QrScan /> */}
+                <Html5QrcodePlugin
+                  fps={10}
+                  qrbox={250}
+                  disableFlip={false}
+                  qrCodeSuccessCallback={onNewScanResult}
+                />
+                {/* <ScanQR /> */}
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
