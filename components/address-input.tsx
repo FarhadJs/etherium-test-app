@@ -12,7 +12,7 @@ import {
 import QrIcon from "@/assets/Scanqr.svg";
 import Image from "next/image";
 // import QrScan from "./qrcode/qrcode-scan";
-import Html5QrcodePlugin from "./qrcode/html5-qrcode-plugin";
+// import Html5QrcodePlugin from "./qrcode/html5-qrcode-plugin";
 import ScanQR from "./qrcode/qr-scanner";
 // import ScanQR from "./qrcode/qr-scanner-test";
 
