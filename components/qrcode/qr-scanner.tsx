@@ -1,60 +1,54 @@
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 
-const ScanQR = () => {
+const ScanQR: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const CameraResult = useRef<HTMLElement>(null);
-  const camHasFlash = useRef<HTMLElement>(null);
-  const qrScannerRef = useRef<QrScanner>();
   const [scanResult, setScanResult] = useState<string>("");
+  const [hasFlash, setHasFlash] = useState<boolean>(false);
 
-  //
-  function setResult(label: HTMLElement, result: any) {
-    console.log(result.data);
-    label.innerText = result.data;
-  }
+  const cameras = QrScanner.listCameras(true);
+  // cameras.then((res) => console.log(res));
 
-  //   const scanner = new QrScanner(
-  //     videoRef.current!,
-  //     (result) => setResult(CameraResult.current!, result),
-  //     {
-  //       highlightScanRegion: true,
-  //       highlightCodeOutline: true,
-  //     }
-  //   );
+  const initializeScanner = async () => {
+    if (videoRef.current) {
+      const qrScanner = new QrScanner(
+        videoRef.current,
+        (result) => {
+          setScanResult(result.data);
+        },
+        {
+          highlightScanRegion: true,
+          highlightCodeOutline: true,
+        }
+      );
 
-  // List cameras after the scanner started to avoid listCamera's stream and the scanner's stream being requested
-  // at the same time which can result in listCamera's unconstrained stream also being offered to the scanner.
-  // Note that we can also start the scanner after listCameras, we just have it this way around in the demo to
-  // start the scanner earlier.
-  const scanner = new QrScanner(videoRef.current!, (result) => {});
-  scanner.start();
+      try {
+        await qrScanner.start();
+        setHasFlash(await qrScanner.hasFlash());
+      } catch (error) {
+        console.error(error);
+      }
 
-  //
+      return qrScanner;
+    }
+  };
 
   useEffect(() => {
-    if (videoRef.current) {
-      const qrScanner = new QrScanner(videoRef.current, (result) => {
-        console.log("Scanned QR code:", result);
-        setScanResult(result.data); // Update the scan result state
-      });
-      qrScanner.start();
-      qrScannerRef.current = qrScanner;
-    }
+    const qrScanner = initializeScanner();
 
     return () => {
-      qrScannerRef.current?.stop();
-      qrScannerRef.current?.destroy();
+      qrScanner.then((scanner) => {
+        scanner?.stop();
+        scanner?.destroy();
+      });
     };
   }, []);
 
   return (
     <div>
       <video ref={videoRef} />
-      {scanResult && <p>Scanned QR Code: {scanResult}</p>}{" "}
-      {/* Display scan result */}
-      Qr Code Result :<span ref={CameraResult}></span>
-      Camera Has Flash ? :<span ref={camHasFlash}></span>
+      <p>Scanned QR Code: {scanResult}</p>
     </div>
   );
 };

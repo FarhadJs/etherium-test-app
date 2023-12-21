@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import QrIcon from "@/assets/Scanqr.svg";
 import Image from "next/image";
-import QrScan from "./qrcode/qrcode-scan";
+// import QrScan from "./qrcode/qrcode-scan";
 import Html5QrcodePlugin from "./qrcode/html5-qrcode-plugin";
 import ScanQR from "./qrcode/qr-scanner";
+// import ScanQR from "./qrcode/qr-scanner-test";
 
 export const AddressInput = () => {
   const onNewScanResult = (decodedText: string, decodedResult: string) => {
@@ -38,13 +39,13 @@ export const AddressInput = () => {
                   className="w-44 h-44 opacity-20 absolute z-0 top-6"
                 /> */}
                 {/* <QrScan /> */}
-                <Html5QrcodePlugin
+                {/* <Html5QrcodePlugin
                   fps={10}
                   qrbox={250}
                   disableFlip={false}
                   qrCodeSuccessCallback={onNewScanResult}
-                />
-                {/* <ScanQR /> */}
+                /> */}
+                <ScanQR />
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
